@@ -54,9 +54,13 @@ modalCart.addEventListener("click", function (event) {
 
 // Goods
 
-const more = document.querySelector(".more"); // button 'view all'
-const navigationLink = document.querySelectorAll(".navigation-link"); // buttons header menu
+const viewAll = document.querySelectorAll(".view-all"); // button 'view all'
+const navigationLink = document.querySelectorAll(
+  ".navigation-link:not(.view-all)"
+); // buttons header menu
 const longGoodsList = document.querySelector(".long-goods-list"); //product output block
+const showAcsessories = document.querySelectorAll(".show-acsessories");
+const showClothing = document.querySelectorAll(".show-clothing");
 
 // Receiving data from the server
 const getGoods = async function () {
@@ -96,9 +100,13 @@ const renderCards = function (data) {
   document.body.classList.add("show-goods");
 };
 
-more.addEventListener("click", function (event) {
+const showAll = function (event) {
   event.preventDefault();
   getGoods().then(renderCards);
+};
+
+viewAll.forEach(function (elem) {
+  elem.addEventListener("click", showAll);
 });
 
 const filterCards = function (field, value) {
@@ -123,34 +131,15 @@ navigationLink.forEach(function (link) {
   });
 });
 
-// Кусок кода
-const fashion = document.querySelector(".fashion");
-fashion.addEventListener("click", function (event) {
-  event.preventDefault();
-  const field = "category";
-  const value = "Accessories";
-  filterCards(field, value);
+showAcsessories.forEach((item) => {
+  item.addEventListener("click", (event) => {
+    event.preventDefault();
+    filterCards("category", "Accessories");
+  });
 });
-
-const shoeses = document.querySelector(".shoeses");
-shoeses.addEventListener("click", function (event) {
-  event.preventDefault();
-  const field = "category";
-  const value = "Shoes";
-  filterCards(field, value);
-});
-
-kana.addEventListener("click", function (event) {
-  event.preventDefault();
-  getGoods().then(renderCards);
-});
-
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault();
-
-    document.querySelector(this.getAttribute("href")).scrollIntoView({
-      behavior: "smooth",
-    });
+showClothing.forEach((item) => {
+  item.addEventListener("click", (event) => {
+    event.preventDefault();
+    filterCards("category", "Clothing");
   });
 });
