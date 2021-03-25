@@ -23,7 +23,8 @@ const showAcsessories = document.querySelectorAll(".show-acsessories"); //Show a
 const showClothing = document.querySelectorAll(".show-clothing"); //Show clothing list
 const cartTableGoods = document.querySelector(".cart-table__goods"); //number of goods
 const cardTableTotal = document.querySelector(".card-table__total"); //total price
-
+const cartCount = document.querySelector(".cart-count");
+const btnDanger = document.querySelector(".btn-danger");
 // Receiving data from the server
 const getGoods = async () => {
   const result = await fetch("db/db.json");
@@ -37,6 +38,17 @@ const getGoods = async () => {
 const cart = {
   // Parameters of individual products
   cartGoods: [],
+  // Counter near the basket
+  countQuantity() {
+    cartCount.textContent = this.cartGoods.reduce((sum, item) => {
+      return sum + item.count;
+    }, 0);
+  },
+  clearCart() {
+    this.cartGoods.length = 0;
+    this.countQuantity();
+    this.renderCart();
+  },
   // Creating a table with a product
   renderCart() {
     cartTableGoods.textContent = "";
@@ -69,6 +81,7 @@ const cart = {
   deleteGood(id) {
     this.cartGoods = this.cartGoods.filter((item) => id !== item.id);
     this.renderCart();
+    this.countQuantity();
   },
 
   // Decrease the quantity of goods
@@ -84,6 +97,7 @@ const cart = {
       }
     }
     this.renderCart();
+    this.countQuantity();
   },
 
   // Increase the quantity of goods
@@ -95,6 +109,7 @@ const cart = {
       }
     }
     this.renderCart();
+    this.countQuantity();
   },
 
   // Add an item
@@ -112,17 +127,22 @@ const cart = {
             price,
             count: 1,
           });
+          this.countQuantity();
         });
     }
   },
 };
 
+btnDanger.addEventListener("click", () => {
+  cart.clearCart();
+});
+
 // Add items to cart from store by button
 document.body.addEventListener("click", (event) => {
-  const AddToCart = event.target.closest(".add-to-cart");
+  const addToCart = event.target.closest(".add-to-cart");
 
-  if (AddToCart) {
-    cart.addCartGoods(AddToCart.dataset.id);
+  if (addToCart) {
+    cart.addCartGoods(addToCart.dataset.id);
   }
 });
 

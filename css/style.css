@@ -66,6 +66,12 @@ button {
   margin-right: 0;
 }
 
+.btn-danger {
+  background-color: tomato;
+  display: block;
+  margin-left: auto;
+}
+
 .cart-count {
   margin-left: 10px;
 }
