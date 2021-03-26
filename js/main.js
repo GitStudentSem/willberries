@@ -214,7 +214,6 @@ modalCart.addEventListener("click", function (event) {
 })();
 
 // function create card
-
 const createCard = function ({ label, name, img, description, id, price }) {
   const card = document.createElement("div");
   card.className = "col-lg-3 col-sm-6";
@@ -258,7 +257,6 @@ const filterCards = function (field, value) {
 };
 
 //Links in the header
-
 navigationLink.forEach(function (link) {
   link.addEventListener("click", (event) => {
     event.preventDefault();
@@ -268,15 +266,50 @@ navigationLink.forEach(function (link) {
   });
 });
 
+// Button Accessories
 showAcsessories.forEach((item) => {
   item.addEventListener("click", (event) => {
     event.preventDefault();
     filterCards("category", "Accessories");
   });
 });
+
+// Button Clothing
 showClothing.forEach((item) => {
   item.addEventListener("click", (event) => {
     event.preventDefault();
     filterCards("category", "Clothing");
   });
+});
+
+// Sending data to the server
+const modalForm = document.querySelector(".modal-form");
+
+const postData = (dataUser) =>
+  fetch("server.php", {
+    method: "POST",
+    body: dataUser,
+  });
+
+modalForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(modalForm);
+  formData.append("cart item: ", JSON.stringify(cart.cartGoods));
+
+  postData(formData)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+      alert("Ваш заказ успешно сформирован");
+    })
+    .catch((err) => {
+      alert("К сожалению произошла ошибка, повторите попытку позже");
+    })
+    .finally(() => {
+      closeModal();
+      modalForm.reset();
+      cart.cartGoods.length = 0;
+    });
 });
